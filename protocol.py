@@ -10,27 +10,6 @@ LISTEN_EVERYONE_IP = '0.0.0.0'
 LISTEN_LOOPBACK_IP = '127.0.0.1'
 SERVER_IP = socket.gethostbyname(socket.gethostname())  # when run on the same network interface # delete - in different constants
 
-CALCULATE_OPERATION_CODE = '1'
-EXIT_OPERATION_CODE = '2'
-ERROR_OPERATION_CODE = '3'
-CLIENT_OPERATION_CODES = [CALCULATE_OPERATION_CODE, EXIT_OPERATION_CODE]
-SUPPORTED_EXERCISE_OPERATIONS = ['+', '-', '*', '/']
-EXERCISE_SEPARATOR = ' '
-
-WELCOME_MSG = '~~ Welcome to calculator - A place where calculating is eazy ~~'
-INSTRUCTIONS = ('build your answer step by step:\n'
-                '\t1. operation code: 1 - CALCULATING your question, 2 - EXIT\n'
-                '\t2. first number\n'
-                '\t3. space\n'
-                '\t4. operation (acceptable: +, -, *, /)\n'
-                '\t5. space\n'
-                '\t6. second number')
-LEADING_QUESTION = 'Enter your question according to the instructions above.'
-
-NUMBERS_ERROR_MSG = 'Error with msg\\exercise numbers: Please ensure a valid operation code and numbers'
-OPERATION_ERROR_MSG = 'Error with exercise operation: Please ensure a valid operation'
-STRUCTURE_ERROR_MSG = 'Error with exercise structure: Please ensure you added the spaces that needed'
-
 
 def garbage_cleaner(my_socket: socket.socket, timeout=0.01) -> None:
     """" Drains all available data from a socket without blocking. """
@@ -106,3 +85,4 @@ def get_payload(my_socket: socket.socket) -> tuple[bool, str]:
     except Exception as e:
         logger.error(f"Unexpected ERROR at get_payload: {e}")
         return False, e.__name__
+
