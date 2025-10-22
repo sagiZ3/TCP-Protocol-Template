@@ -81,8 +81,7 @@ def get_payload(my_socket: socket.socket) -> tuple[bool, str]:
 
     except ConnectionResetError as e:
         logger.warning("The other side unexpectedly closed the connection; source: get_payload")
-        return False, e.__name__
+        return False, type(e).__name__
     except Exception as e:
         logger.error(f"Unexpected ERROR at get_payload: {e}")
-        return False, e.__name__
-
+        return False, type(e).__name__
