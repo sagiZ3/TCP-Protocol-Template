@@ -62,6 +62,7 @@ def get_payload(my_socket: socket.socket) -> tuple[bool, str]:
     Handles connection reset or unexpected errors gracefully.
 
     :return: Tuple of boolean (True if valid, False otherwise) and string (payload if valid, error msg otherwise).
+    :exception socket.timeout: If recv() exceeds the configured timeout without receiving data.
     """
 
     try:
@@ -69,7 +70,7 @@ def get_payload(my_socket: socket.socket) -> tuple[bool, str]:
 
         if encode_payload_len == "":  # means that the other side closed the connection
             logger.warning("The other side of the socket is closed!")
-            return False, ConnectionAbortedError.__name__
+            return False, ConnectionResetError.__name__
 
         payload: str = my_socket.recv(int(encode_payload_len)).decode('utf-8')
 
@@ -79,9 +80,17 @@ def get_payload(my_socket: socket.socket) -> tuple[bool, str]:
         garbage_cleaner(my_socket)
         return False, "General Error"
 
+    except socket.timeout:
+        raise socket.timeout  # the error is capture outside for continue in the function use
+
     except ConnectionResetError as e:
         logger.warning("The other side unexpectedly closed the connection; source: get_payload")
         return False, type(e).__name__
+
+    except ConnectionAbortedError as e:
+        logger.error("Cannot transfer data - the socket is closed")
+        return False, type(e).__name__
+
     except Exception as e:
         logger.error(f"Unexpected ERROR at get_payload: {e}")
         return False, type(e).__name__
